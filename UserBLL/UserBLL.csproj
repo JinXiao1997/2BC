@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Unity" Version="5.11.1" />
+    <PackageReference Include="Unity.Abstractions" Version="5.11.1" />
+    <PackageReference Include="Unity.Configuration" Version="5.11.1" />
+    <PackageReference Include="Unity.Container" Version="5.11.1" />
+    <PackageReference Include="Unity.Interception" Version="5.11.1" />
+    <PackageReference Include="Unity.Interception.Configuration" Version="5.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IUserBLL\IUserBLL.csproj" />
+    <ProjectReference Include="..\UserDAL\UserDAL.csproj" />
+  </ItemGroup>
+
+</Project>
