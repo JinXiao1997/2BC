@@ -20,7 +20,7 @@ namespace Sp_User.Controllers
         public WeatherForecastController(IMemberUserBLL db) {
             this.db = db;
         }
-        //tEST3ddddD2
+        //tEST3ddddD22
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
