@@ -20,11 +20,10 @@ namespace Sp_User.Controllers
         public WeatherForecastController(IMemberUserBLL db) {
             this.db = db;
         }
-        //tEST3ddddD22
+        //test
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
-
             var model = await db.Login("123", "456");
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
