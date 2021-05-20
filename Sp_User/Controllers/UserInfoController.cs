@@ -30,11 +30,11 @@ namespace Sp_User.Controllers
         {
             return await db.Login(login.name, login.pwd);
         }
-        [HttpPost("reg")]
-        public async Task<TData> Register(RegDto login)
-        {
-            return await db.Login(login.name, login.pwd);
-        }
+        //[HttpPost("reg")]
+        //public async Task<TData> Register(RegDto login)
+        //{
+        //    return await db.Login(login.name, login.pwd);
+        //}
 
 
     }
