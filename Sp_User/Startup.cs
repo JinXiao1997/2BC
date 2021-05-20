@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sp_User.AOP;
 using UserBLL;
 using UserDAL;
 
@@ -25,10 +26,9 @@ namespace Sp_User
         {
             services.AddControllers();
             services.AddDbContext<DBContex>(options => options.UseMySQL(Configuration.GetConnectionString("MySqlConnection")));
+            services.AddTransient<IUserDAL.IUserDAL, UserDAL.UserDALTwo>();
             services.AddTransient<IUserDAL.IUserDAL, UserDAL.UserDAL>();
             services.AddTransient<IMemberUserBLL, MemberUserBLL>();
-     
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

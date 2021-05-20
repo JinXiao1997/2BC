@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using UserModel;
 
 namespace IUserBLL
 {
@@ -11,6 +12,6 @@ namespace IUserBLL
         /// <param name="name">账号</param>
         /// <param name="pwd">密码</param>
         /// <returns></returns>
-        public  Task<bool> Login(string name,string pwd);
+        public  Task<TData> Login(string name,string pwd);
     }
 }
