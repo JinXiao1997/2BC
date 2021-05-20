@@ -12,12 +12,4 @@ namespace UserDAL
             this.DB = DB;
         }
     }
-    public class UserDALTwo : BaseDAL<MemberUser>, IUserDAL.IUserDAL
-    {
-        private DBContex DB;
-        public UserDALTwo(DBContex DB) : base(DB)
-        {
-            this.DB = DB;
-        }
-    }
 }

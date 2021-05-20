@@ -42,11 +42,11 @@ namespace Tools
             }
             catch (TokenExpiredException )
             {
-               return "令牌已过期";
+               throw  new Exception("令牌已过期");
             }
             catch (SignatureVerificationException)
             {
-                return "签名验证失败，数据可能被篡改";
+                throw new Exception("签名验证失败，数据可能被篡改");
             }
         }
    

@@ -16,28 +16,58 @@ namespace UserBLL
         {
             this.userSvc = userSvc;
         }
-       
 
-       public async Task<TData>  Login(string name, string pwd)
+
+        public async Task<TData> Login(string name, string pwd)
         {
             TData<object> data = new TData<object>();
             UserModel.MemberUser model = await userSvc.FindAsync(p => p.UserName.Equals(name));
-            if (model==null) 
+            if (model == null)
             {
-                data.Tag = 0;
-                data.Message = "用户不存在";
+                throw new Exception("用户不存在");
+                //data.Tag = 0;
+                //data.Message = "用户不存在";
             }
-            else if(!model.PassWord.Equals(pwd))
+            else if (!model.PassWord.Equals(pwd))
             {
-                data.Tag = 0;
-                data.Message = "密码错误";
+                throw new Exception("密码错误");
+                //data.Tag = 0;
+                //data.Message = "密码错误";
             }
             else
             {
+                try
+                {
+                    data.Tag = 1;
+                    data.Message = "登录成功";
+                    var obj = new { Token = JwtTools.GetToken(name) };
+                    data.Result = obj;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("登录失败" + ex.Message);
+                }
+            }
+            return data;
+        }
+
+        public async Task<TData> Register(MemberUser model)
+        {
+            TData data = new TData();
+          
+            if (await userSvc.FindAsync(p => p.Mobile.Equals(model.Mobile) || p.Email.Equals(model.Email)||p.UserName.Equals(model.UserName))!=null )
+            {
+                throw new Exception("该用户已注册");
+            }
+            int i = await userSvc.AddEntityAsync(model);
+            if (i > 0)
+            {
                 data.Tag = 1;
-                data.Message = "登录成功";
-                var obj = new { Token = JwtTools.GetToken(name) };
-                data.Result = obj;
+                data.Message = "注册成功";
+            }
+            else
+            {
+                throw new Exception("注册失败");
             }
             return data;
         }

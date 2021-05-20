@@ -1,7 +1,9 @@
-﻿using IUserBLL;
+﻿using AutoMapper;
+using IUserBLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Sp_User.AOP;
 using Sp_User.DTOS;
 using System;
 using System.Collections.Generic;
@@ -14,15 +16,17 @@ namespace Sp_User.Controllers
 
     [ApiController]
     [Route("UserInfo")]
-   
 
+    [UserFilter]
     public class UserInfoController : ControllerBase
     {
 
-        IMemberUserBLL db;
-        public UserInfoController(IMemberUserBLL db)
+       private readonly IMemberUserBLL db;
+        private readonly IMapper mapper;
+        public UserInfoController(IMemberUserBLL db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -30,10 +34,13 @@ namespace Sp_User.Controllers
         {
             return await db.Login(login.name, login.pwd);
         }
-        [HttpPost("reg")]
-        public async Task<TData> Register(RegDto login)
+        [HttpPost("Register")]
+     
+        public async Task<TData>  Register(RegDto login)
         {
-            return await db.Login(login.name, login.pwd);
+            var model = mapper.Map<MemberUser>(login);
+            return await db.Register(model);
+
         }
 
 

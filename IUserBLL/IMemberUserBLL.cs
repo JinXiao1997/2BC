@@ -13,5 +13,7 @@ namespace IUserBLL
         /// <param name="pwd">密码</param>
         /// <returns></returns>
         public  Task<TData> Login(string name,string pwd);
+
+        public Task<TData> Register(MemberUser model);
     }
 }
