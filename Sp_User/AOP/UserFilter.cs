@@ -1,4 +1,4 @@
-﻿using java.lang;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -10,6 +10,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using UserModel;
+using System.Text;
+using java.lang;
 
 namespace Sp_User.AOP
 {
@@ -66,7 +68,8 @@ namespace Sp_User.AOP
                 {
                     TData data = new TData();
                     data.Tag = 0;
-                    StringBuffer sb = new StringBuffer();
+               StringBuffer sb = new StringBuffer();
+
                     foreach (var item in obj.Errors)
                     {
                         foreach (var itemTwo in item.Value)

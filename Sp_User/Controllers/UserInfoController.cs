@@ -40,7 +40,6 @@ namespace Sp_User.Controllers
         {
             var model = mapper.Map<MemberUser>(login);
             return await db.Register(model);
-
         }
 
 

@@ -124,9 +124,9 @@ namespace UserDAL
         /// </summary>
         /// <typeparam name="keyValue">主键</typeparam>
         /// <returns></returns>
-        public async Task<T> FindAsync(string keyValue)
+        public Task<T> FindAsync(string keyValue)
         {
-            return await DB.Set<T>().FindAsync(keyValue);
+            return   DB.Set<T>().FindAsync(keyValue);
         }
         /// <summary>
         /// 根据条件查询单个(异步)

@@ -25,14 +25,10 @@ namespace UserBLL
             if (model == null)
             {
                 throw new Exception("用户不存在");
-                //data.Tag = 0;
-                //data.Message = "用户不存在";
             }
             else if (!model.PassWord.Equals(pwd))
             {
                 throw new Exception("密码错误");
-                //data.Tag = 0;
-                //data.Message = "密码错误";
             }
             else
             {
