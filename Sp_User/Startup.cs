@@ -10,6 +10,7 @@ using AutoMapper;
 using UserBLL;
 using UserDAL;
 using Sp_User.DTOS;
+using Wei.RedisHelper;
 
 namespace Sp_User
 {
@@ -30,6 +31,9 @@ namespace Sp_User
             services.AddTransient<IUserDAL.IUserDAL, UserDAL.UserDAL>();
             services.AddTransient<IMemberUserBLL, MemberUserBLL>();
             services.AddAutoMapper(typeof(AutoMapConfig));
+            services.AddRedisHelper(ops => {
+                ops.RedisConnectionString = Configuration.GetConnectionString("RedisConfig");
+            });
 
         }
 

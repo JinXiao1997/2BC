@@ -6,43 +6,53 @@ using System.Threading.Tasks;
 using UserDAL;
 using UserModel;
 using Tools;
+using Wei.RedisHelper;
 
 namespace UserBLL
 {
     public class MemberUserBLL : IMemberUserBLL
     {
         private IUserDAL.IUserDAL userSvc;
-        public MemberUserBLL(IUserDAL.IUserDAL userSvc)
+        private readonly RedisClient redisClient;
+        public MemberUserBLL(IUserDAL.IUserDAL userSvc, RedisClient client)
         {
             this.userSvc = userSvc;
+            redisClient = client;
         }
 
 
         public async Task<TData> Login(string name, string pwd)
         {
             TData<object> data = new TData<object>();
-            UserModel.MemberUser model = await userSvc.FindAsync(p => p.UserName.Equals(name));
+            UserModel.MemberUser model =  redisClient.StringGet<UserModel.MemberUser>("User"+name);
             if (model == null)
             {
-                throw new Exception("用户不存在");
+                //防止缓存穿透
+                if (!redisClient.KeyExists("User" + name)) 
+                {
+                    model = await userSvc.FindAsync(p => p.UserName.Equals(name));
+                    if (model == null)
+                    {
+                        redisClient.StringSet<UserModel.MemberUser>("User" + name, null, TimeSpan.FromHours(new Random().Next(10, 99)));
+                        throw new Exception("用户不存在");
+                    }
+                }
+                else
+                {
+                    throw new Exception("用户不存在");
+                }
             }
-            else if (!Tools.Base64.DecodeBase64(Encoding.UTF8, model.PassWord).Equals(pwd))
+            if (!Tools.Base64.DecodeBase64(Encoding.UTF8, model.PassWord).Equals(pwd))
             {
                 throw new Exception("密码错误");
             }
             else
             {
-                try
-                {
-                    data.Tag = 1;
-                    data.Message = "登录成功";
-                    var obj = new { Token = JwtTools.GetToken(name) };
-                    data.Result = obj;
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("登录失败" + ex.Message);
-                }
+               bool isOK=  redisClient.StringSet<UserModel.MemberUser>("User" + name, model, TimeSpan.FromHours(new Random().Next(10, 99)));
+                data.Tag = 1;
+                data.Message = "登录成功";
+                var obj = new { Token = JwtTools.GetToken(name) };
+                data.Result = obj;
             }
             return data;
         }
@@ -50,8 +60,6 @@ namespace UserBLL
         public async Task<TData> Register(MemberUser model)
         {
             TData data = new TData();
-          
-           
             var db = userSvc.BeginTran();
             try
             {
@@ -66,6 +74,7 @@ namespace UserBLL
                 {
                     data.Tag = 1;
                     data.Message = "注册成功";
+                    redisClient.StringSet<UserModel.MemberUser>("User" + model.UserName, model, TimeSpan.FromHours(new Random().Next(10, 99)));
                 }
                 else
                 {
