@@ -9,7 +9,6 @@ namespace Sp_User.DTOS
     public class RegDto
     {
         [Required(ErrorMessage = "姓名必填")]
-        [MaxLength(20,ErrorMessage = "密码大于20位"),MinLength(5,ErrorMessage = "密码小于5位")]
         public string UserName { get; set; }
         [MaxLength(20,ErrorMessage = "密码大于20位"), MinLength(5,ErrorMessage = "密码小于5位")]
         public string PassWord { get; set; }

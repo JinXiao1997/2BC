@@ -10,6 +10,7 @@ namespace UserModel
     public class MemberUser
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         [Column("level_id")]
         public long LevelId { get; set; }

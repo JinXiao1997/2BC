@@ -34,10 +34,14 @@ namespace Sp_User.AOP
         }
 
         public void OnException(ExceptionContext context)
-        {         
+        {
+            StringBuffer sb = new StringBuffer();
             TData data = new TData();
             data.Tag = 0;
-            data.Message = context.Exception.Message;
+            foreach (var item in context.RouteData.Values.Values) {
+                sb.append(item.ToString());
+            }
+            data.Message = context.Exception.Message+"--"+sb.toString();
             context.Result = new JsonResult(data);
 
         }

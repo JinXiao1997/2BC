@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using UserModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace UserDAL
 {
@@ -15,7 +16,13 @@ namespace UserDAL
                : base(options)
         {
         }
- 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var loggerFactory = new LoggerFactory();
+            loggerFactory.AddProvider(new EFLoggerProvider());
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+            base.OnConfiguring(optionsBuilder);
+        }
         public DbSet<MemberUser> Member { get; set; }
     }
 }

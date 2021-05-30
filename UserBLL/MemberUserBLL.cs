@@ -26,7 +26,7 @@ namespace UserBLL
             {
                 throw new Exception("用户不存在");
             }
-            else if (!model.PassWord.Equals(pwd))
+            else if (!Tools.Base64.DecodeBase64(Encoding.UTF8, model.PassWord).Equals(pwd))
             {
                 throw new Exception("密码错误");
             }
@@ -51,21 +51,36 @@ namespace UserBLL
         {
             TData data = new TData();
           
-            if (await userSvc.FindAsync(p => p.Mobile.Equals(model.Mobile) || p.Email.Equals(model.Email)||p.UserName.Equals(model.UserName))!=null )
+           
+            var db = userSvc.BeginTran();
+            try
             {
-                throw new Exception("该用户已注册");
+                if (await userSvc.FindAsync(p => p.Mobile.Equals(model.Mobile) || p.UserName.Equals(model.UserName)) != null)
+                {
+                    throw new Exception("该用户已注册");
+                }
+                model.PassWord=Tools.Base64.EncodeBase64(Encoding.UTF8,model.PassWord);
+                int i = await userSvc.AddEntityAsync(model);
+                //int i = await userSvc.ExecuteSql("insert into ums_member(id,level_id,username,password,nickname,mobile,email,header,gender, birth, job, sign, source_type, integration,growth,status,create_time)VALUES(" + model.Id + ", " + model.LevelId + ", '" + model.UserName + "', '" + model.PassWord + "', '" + model.NickName + "', '" + model.Mobile + "', '" + model.Email + "', '" + model.Header + "', " + model.Gender + ", '" + model.Birth + "', '" + model.Job + "', '" + model.Sign + "', " + model.SourceType + ", " + model.Integration + ", " + model.Growth + ", " + model.Status + ", '" + model.CreateTime + "')");
+                if (i > 0)
+                {
+                    data.Tag = 1;
+                    data.Message = "注册成功";
+                }
+                else
+                {
+                    throw new Exception("注册失败");
+                }
+                db.Commit();
+                return data;
+
             }
-            int i = await userSvc.AddEntityAsync(model);
-            if (i > 0)
+            catch (Exception)
             {
-                data.Tag = 1;
-                data.Message = "注册成功";
+                db.Rollback();
+                throw;
             }
-            else
-            {
-                throw new Exception("注册失败");
-            }
-            return data;
+        
         }
     }
 }
