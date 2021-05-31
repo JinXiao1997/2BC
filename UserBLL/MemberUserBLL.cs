@@ -20,7 +20,7 @@ namespace UserBLL
             redisClient = client;
         }
 
-
+        //
         public async Task<TData> Login(string name, string pwd)
         {
             TData<object> data = new TData<object>();
